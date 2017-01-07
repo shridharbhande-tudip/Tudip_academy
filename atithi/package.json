@@ -28,6 +28,7 @@
     "save": "^2.3.0",
     "trim": "0.0.1",
     "validate.io-empty": "^1.0.2",
-    "validator": "~6.2.0"
+    "validator": "~6.2.0",
+    "serve-favicon":"^2.1.3"
   }
 }

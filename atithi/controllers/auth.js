@@ -1,17 +1,17 @@
 var express = require('express');
 var app = express();
-var apiRoutes = express.Router();
+// var apiRoutes = express.Router();
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 var User = require('../app/models/user');
 require('../app/models/user');
-var isEmpty = require('validate.io-empty');
 var validator = require("email-validator");
 var bcrypt = require('bcrypt');
-var error=require('../helper/error_constants');
-
+var error=require('../helper/error_messages');
 app.set('superSecret', config.secret);
 
+
+//Receptionist Registration logic
 exports.register = function (req, res) {
     console.log(req.body);
 
@@ -30,16 +30,19 @@ exports.register = function (req, res) {
                     user.email = req.body.email.trim();
                     user.password = req.body.password;
 
+                    // Encrypting password using Bcrypt
                     bcrypt.genSalt(10, function (err, salt) {
                         bcrypt.hash(user.password, salt, function (err, hash) {
                             if (err) {
-                                res.status(500).send({'error': true, 'massage': error.INTERNAL_SERVER_ERROR});
+                                res.status(500).send({'error': true, 'massage': error.Bcrypt_Related_Error});
                             }
                             else if (!hash) {
                                 res.status(400).send({'error': true, 'massage': error.Password_Encryption_Error});
                             }
                             else {
                                 user.password = hash;
+
+                                // Save user in DB
                                 user.save(function (err) {
                                     if (err) {
                                         //console.log(err);
@@ -79,25 +82,28 @@ exports.register = function (req, res) {
 };
 
 
+//Receptionist login logic
 exports.login = function (req, res) {
     var password = req.body.password;
 
 
     User.findOne({email: req.body.email.trim()}, function (err, user) {
-        console.log("successfully find user ");
+        console.log(email);
 
         if (err) {
-            console.log(err);
+            res.status(500).send({'error': true, 'message': error.INTERNAL_SERVER_ERROR});
         }
         if (!user) {
-            res.json({success: false, message: error.User_Not_Found});
+            res.status(404).send({'error': true, 'massage': error.User_Not_Found});
         }
         else {
             var hash1 = user.password;
+
+            // Decrypting password using Bcrypt
             bcrypt.compare(password, hash1, function (err, isMatch) {
 
                     if (err) {
-                        res.status(500).send({'error': true, 'massage': error.INTERNAL_SERVER_ERROR});
+                        res.status(400).send({'error': true, 'massage': error.Password_Not_Match});
                     }
                     if (isMatch) {
                         console.log(isMatch);

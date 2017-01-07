@@ -12,9 +12,9 @@ var now = require("date-now");
 
 app.set('superSecret', config.secret);
 require('../app/models/user');
-var error=require('../helper/error_constants');
+var error=require('../helper/error_messages');
 
-//add visitor to Db
+//add visitor to Database
 exports.add = function (req, res) {
     console.log(req.body);
 
@@ -23,7 +23,7 @@ exports.add = function (req, res) {
 
         User.find({token: req.headers.token}, function (err, isMatch) {
             if (err) {
-                res.status(500).send({'error': true, 'message': error.INTERNAL_SERVER_ERROR});
+                res.status(400).send({'error': true, 'message': error.Token_Not_Found_Error});
             }
             if (isMatch.length === 0) {
                 res.status(400).send({'error': true, 'message': error.User_Not_Found});
@@ -41,8 +41,8 @@ exports.add = function (req, res) {
                         visitor.name = req.body.name;
                         visitor.email = req.body.email.trim();
                         visitor.phone_no = req.body.phone_no;
-                        visitor.in_time = req.body.in_time;
-                        visitor.out_time = req.body.out_time;
+                        visitor.in_time = Date.now();
+                        visitor.out_time = Date.now();
                         visitor.user_id = user_id;
 
                         if (mail) {
@@ -50,10 +50,7 @@ exports.add = function (req, res) {
                                 if (req.body.phone_no.length === 10) {
                                     visitor.save(function (err) {
                                         if (err) {
-                                            res.status(400).send({
-                                                'error': true,
-                                                'message': ''
-                                            });
+                                            res.status(400).send({'message': error.Incorrect_Input_data_Error});
                                         }
                                         else {
 
@@ -168,18 +165,19 @@ exports.update = function (req, res) {
 
                             }
                             if (req.body.in_time) {
-                                visitor[0].in_time = req.body.in_time;
+                                visitor[0].in_time = Date.now();
 
                             }
                             if (req.body.out_time) {
-                                visitor[0].out_time = req.body.out_time;
+                                visitor[0].out_time = Date.now();
+
 
                             }
-                            visitor[0].save(function (err) {
+                             visitor[0].save(function (err) {
                                 if (err) {
                                     res.status(500).send({'error': true, 'message': error.INTERNAL_SERVER_ERROR});
                                 }
-                                res.send({success: true});
+                                res.status(201).send({success: true});
 
                             });
                         }
@@ -222,7 +220,7 @@ exports.find_id = function (req, res) {
                         else {
 
                             console.log("Successfully find user by ID");
-                            res.send({"Specific visitor": visitor[0]});
+                            res.status(200).send({"Specific visitor": visitor[0]});
 
                         }
 
@@ -245,12 +243,12 @@ exports.findAll = function (req, res) {
             res.status(500).send({'error': true, 'message': error.INTERNAL_SERVER_ERROR});
         }
         if (isMatch.length === 0) {
-            res.status(400).send({'error': true, 'message': error.Visitor_Not_Found});
+            res.status(400).send({'error': true, 'message': error.User_Not_Found});
         }
         else {
             jwt.verify(req.headers.token, app.get('superSecret'), function (err) {
                 if (err) {
-                    res.status(401).send({'error': true, 'message': error.Session_Expired_Error});
+                    res.status(400).send({'error': true, 'message': error.Session_Expired_Error});
                 }
                 Visitor.find({'user_id': isMatch[0]._id}, function (err, visitor) {
                     console.log(isMatch[0]._id);
@@ -263,7 +261,7 @@ exports.findAll = function (req, res) {
                     }
                     else {
                         console.log("Successfully find user by ID");
-                        res.send(visitor);
+                        res.status(200).send(visitor);
 
                     }
 
