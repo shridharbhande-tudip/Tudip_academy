@@ -9,17 +9,22 @@ var isEmpty = require('validate.io-empty');
 var validator = require("email-validator");
 var remove = require('remove');
 var now = require("date-now");
+var valid = require('validator');
 
 app.set('superSecret', config.secret);
 require('../app/models/user');
-var error=require('../helper/error_messages');
+var error = require('../helper/error_messages');
 
 //add visitor to Database
 exports.add = function (req, res) {
     console.log(req.body);
 
+    var fieldName = req.body.name;
+    var fieldEmail = req.body.email;
+    var fieldPhone_no = req.body.phone_no;
     var mail = validator.validate(req.body.email.trim());
-    if (req.body.name && req.body.email && req.body.phone_no) {
+
+    if (fieldName && fieldEmail && fieldPhone_no) {
 
         User.find({token: req.headers.token}, function (err, isMatch) {
             if (err) {
@@ -38,22 +43,26 @@ exports.add = function (req, res) {
                         var user_id = isMatch[0]._id;
                         //sample user
                         var visitor = new Visitor();
-                        visitor.name = req.body.name;
-                        visitor.email = req.body.email.trim();
-                        visitor.phone_no = req.body.phone_no;
+                        visitor.name = fieldName;
+                        visitor.email = fieldEmail.trim();
+                        visitor.phone_no = fieldPhone_no;
                         visitor.in_time = Date.now();
                         visitor.out_time = Date.now();
                         visitor.user_id = user_id;
 
                         if (mail) {
-                            if (isNaN(req.body.name)) {
-                                if (req.body.phone_no.length === 10) {
+
+                            var name = fieldName.trim();
+                            var name1 = name.replace(' ', '');
+                            if (valid.isAlpha(name1)) {
+
+                                if (fieldPhone_no.length === 10) {
                                     visitor.save(function (err) {
                                         if (err) {
+                                            console.log('err------------', err);
                                             res.status(400).send({'message': error.Incorrect_Input_data_Error});
                                         }
                                         else {
-
                                             res.status(201).send({'message': error.Visitor_Created_Successfully});
                                         }
                                     });
@@ -173,11 +182,11 @@ exports.update = function (req, res) {
 
 
                             }
-                             visitor[0].save(function (err) {
+                            visitor[0].save(function (err) {
                                 if (err) {
                                     res.status(500).send({'error': true, 'message': error.INTERNAL_SERVER_ERROR});
                                 }
-                                res.status(201).send({success: true});
+                                res.status(201).send({success: true,'Visitor updated data':visitor[0]});
 
                             });
                         }

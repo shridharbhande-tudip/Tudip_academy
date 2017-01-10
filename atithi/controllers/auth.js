@@ -1,34 +1,41 @@
 var express = require('express');
 var app = express();
-// var apiRoutes = express.Router();
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 var User = require('../app/models/user');
-require('../app/models/user');
+// require('../app/models/user');
 var validator = require("email-validator");
 var bcrypt = require('bcrypt');
-var error=require('../helper/error_messages');
+var error = require('../helper/error_messages');
 app.set('superSecret', config.secret);
+var valid = require('validator');
 
 
 //Receptionist Registration logic
 exports.register = function (req, res) {
     console.log(req.body);
 
-    if (req.body.name && req.body.email && req.body.password) {
-        var email = validator.validate(req.body.email.trim());
+    var fieldName = req.body.name;
+    var fieldEmail = req.body.email;
+    var fieldPassword = req.body.password;
+
+    if (fieldName && fieldEmail && fieldPassword) {
+        var email = validator.validate(fieldEmail.trim());
         console.log(email);
 
-        if (isNaN(req.body.name)) {
+        var name = fieldName.trim();
+        var name1 = name.replace(' ', '');
+        if (valid.isAlpha(name1)) {
+
             if (email) {
                 if (req.body.password.length >= 6) {
 
                     // create a sample user
                     var user = new User();
 
-                    user.name = req.body.name;
-                    user.email = req.body.email.trim();
-                    user.password = req.body.password;
+                    user.name = fieldName;
+                    user.email = fieldEmail.trim();
+                    user.password = fieldPassword;
 
                     // Encrypting password using Bcrypt
                     bcrypt.genSalt(10, function (err, salt) {
@@ -63,7 +70,7 @@ exports.register = function (req, res) {
                             }
                         });
                     });
-                 }
+                }
                 else {
                     res.status(400).send({'error': true, 'meassage': error.Short_Password_Error});
                 }
@@ -84,11 +91,12 @@ exports.register = function (req, res) {
 
 //Receptionist login logic
 exports.login = function (req, res) {
-    var password = req.body.password;
 
+    var fieldPassword = req.body.password;
+    var fieldEmail = req.body.email;
 
-    User.findOne({email: req.body.email.trim()}, function (err, user) {
-        console.log(email);
+    User.findOne({email: fieldEmail.trim()}, function (err, user) {
+        // console.log(email);
 
         if (err) {
             res.status(500).send({'error': true, 'message': error.INTERNAL_SERVER_ERROR});
@@ -100,33 +108,27 @@ exports.login = function (req, res) {
             var hash1 = user.password;
 
             // Decrypting password using Bcrypt
-            bcrypt.compare(password, hash1, function (err, isMatch) {
+            bcrypt.compare(fieldPassword, hash1, function (err, isMatch) {
 
                     if (err) {
                         res.status(400).send({'error': true, 'massage': error.Password_Not_Match});
                     }
                     if (isMatch) {
                         console.log(isMatch);
+                        user.token = null;
+                        user.save();
 
-                        if (password != req.body.password) {
-                            res.send({'error': true, 'massage': error.Password_Encryption_Error});
-                        }
-                        else {
-                             user.token=null;
-                             user.save();
+                        var token = jwt.sign(user, app.get('superSecret'), {
+                            expiresIn: 86400 // expires in 24 hours
 
-                            var token = jwt.sign(user, app.get('superSecret'), {
-                                expiresIn: 86400 // expires in 24 hours
-
-                            });
-                            res.json({
-                                success: true,
-                                message: 'Your login token generate!',
-                                token: token
-                            });
-                            user.token=token;
-                            user.save();
-                        }
+                        });
+                        res.json({
+                            success: true,
+                            message: 'Your login token generate!',
+                            token: token
+                        });
+                        user.token = token;
+                        user.save();
                     }
                     else {
                         res.status(403).send({success: true, meassage: error.Password_Encryption_Error});

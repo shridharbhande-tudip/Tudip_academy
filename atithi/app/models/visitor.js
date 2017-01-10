@@ -3,12 +3,10 @@ var Schema = mongoose.Schema;
 var now = require("date-now");
 
 
-
 module.exports = mongoose.model('Visitor', new Schema({
         name: {
             type: String,
-            required: true,
-            validate: /^[a-zA0-Z9][a-zA-Z\\w]$/
+            required: true
         },
 
         email: {
