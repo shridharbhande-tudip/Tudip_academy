@@ -1,0 +1,57 @@
+var MangoClient=require('mongoose');
+MangoClient.connect('mongodb://localhost:27017',function (err,db) {
+
+    if(err)
+    {
+        throw err;
+
+    }else
+    {
+        console.log("connected..............");
+
+    }
+    //db.close();
+
+
+})
+
+//mongoose.connect("mongodb://localhost/myapp");
+var UserSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    salt: String,
+    hash: String
+});
+
+/*
+
+var express = require('express');
+var mongodb = require('mongodb');
+var app = express();
+
+var MongoClient = require('mongodb').MongoClient;
+var db;
+
+// Initialize connection once
+MongoClient.connect("mongodb://localhost:27017/integration_test", function(err, database) {
+    if(err) throw err;
+
+    db = database;
+    // Start the application after the database connection is ready
+    app.listen(3000);
+    console.log("Successful connection on port 3000");
+});
+
+// Reuse database object in request handlers
+app.get("/", function(req, res) {
+    db.collection("replicaset_mongo_client_collection").find({}, function(err, docs) {
+        docs.each(function(err, doc) {
+            if(doc) {
+                console.log(doc);
+            }
+            else {
+                res.end();
+            }
+        });
+    });
+});*/
