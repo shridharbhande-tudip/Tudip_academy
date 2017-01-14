@@ -95,7 +95,6 @@ exports.add = function (req, res) {
 exports.delete = function (req, res) {
     console.log(req.body);
 
-
     User.find({token: req.headers.token}, function (err, isMatch) {
         if (err) {
             res.status(500).send({'error': true, 'message': error.INTERNAL_SERVER_ERROR});

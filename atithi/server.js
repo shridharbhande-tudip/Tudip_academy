@@ -33,7 +33,6 @@ router.get('/myAPI', function (req, res) {
 
 });
 
-
 app.use('/api/auth', authRoute);
 app.use('/api/visitors', visitorsRoute);
 app.use('/api', router);
