@@ -1,0 +1,58 @@
+<div class="container">
+    <h1>Visitor's List</h1>
+    <table *ngIf="view_visit" border="1" >
+        <tr class = "mainrow">
+            <td>ID</td>
+            <td>Name</td>
+            <td>Email</td>
+            <td>Phone-no</td>
+            <td>In-Time</td>
+            <td>Out-Time</td>
+            <td>Operation</td>
+
+    </tr>
+
+<tr *ngFor = "let visitor of allVisitor">
+
+    <td>{{visitor._id}}</td>
+    <td>{{visitor.name}}</td>
+    <td>{{visitor.email}}</td>
+    <td> {{visitor.phone_no}}</td>
+    <td>{{visitor.in_time}}</td>
+    <td >{{visitor.out_time}}</td>
+
+
+      <td>  <input type="button" value="Delete" (click)="visitordelete(visitor._id)">
+    </td>
+    
+    </tr>
+    </table>
+
+    <div class="button">
+        <a [routerLink]="['../addVisitor']">Add Visitor</a>
+    </div>
+
+    <div *ngIf="update" class="form-container">
+    <form [formGroup]="form" (ngSubmit)="onUpdate(form.value)" class="form-horizontal">
+      
+         <div class = "form-group row col-md-12 inputbutton namediv" >
+          <label>Enter name:</label><input [formControl]="name" type="text" class="form-control inputbox"  [value]="visitor_edited.name">
+         </div>
+         <div class = "form-group row col-md-12 inputbutton emaildiv" >
+          <label>E-mail:</label> <input [formControl]="email" type="email" class="form-control inputbox"  [value]="visitor_edited.email" >
+         </div>
+         <div class="form-group row col-md-12 inputbutton phonediv">
+           <label>Phone:</label><input [formControl]="mobile" type="tel" class="form-control inputbox" [value]="visitor_edited.phone_no">
+         </div>
+         <div class = "form-group row col-md-12 inputbutton intimediv" >
+          <label>In-time:</label><input [formControl]="in_time" type="datetime-local" class="form-control inputbox" [value]="visitor_edited.in_time">
+         </div>
+         <div class = "form-group row col-md-12 inputbutton outdiv" >
+            <label>Out-time:</label><input [formControl]="out_time" type="datetime-local" class="form-control inputbox" [value]="visitor_edited.out_time">
+         </div>
+         <div class = "form-group row col-md-12 inputbutton submitButton">
+           <input [disabled]="!form.valid || submitted" type="submit" class="AddVisitor" value="Update Visitor">
+         </div>
+      </form>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+@media screen and (min-width: 200px) and (max-width: 700px) {
+  .loginSegment {
+    width: 100% !important;
+  }
+  .loginSegment {
+    width: 60% !important;
+  }
+}
+
+.loginContainer {
+  text-align: left;
+  .loginSegment {
+    width: 28%;
+    display: inline-block;
+    div {
+      text-align: center;
+      font-size: 15px;
+      margin-top: 5%;
+      font-weight: 500;
+      letter-spacing: 0.005em;
+      font-family: ff-clan-web-pro, "Helvetica Neue", Helvetica, sans-serif;
+
+    }
+    .signin {
+      padding-bottom: 5%;
+    }
+    .horizontalLine {
+      margin-left: 0 !important;
+      padding: 0 !important;
+      hr {
+        border-top: 1px solid gainsboro !important;
+      }
+    }
+    .logintitle {
+      width: 30%;
+      display: inline-block;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .inputbutton {
+      height: 58px;
+      line-height: 2.8;
+      margin: 4% 0 4% 0;
+    }
+
+    .submitButton {
+      margin-top: 7%;
+    }
+    .inputbox {
+      border-radius: 1px !important;
+      background-color: white !important;
+      width: 100%;
+      height: 100%;
+      margin-bottom: 0px !important;
+      border: 1px solid gainsboro;
+      padding-left: 2%;
+    }
+    .inputbox:focus {
+      border: thin solid #449CD6 !important;
+      outline: none !important;
+      box-shadow: none !important;
+      -webkit-transition: border linear .2s, box-shadow linear .2s;
+    }
+    .passwordtext {
+      margin-top: 0px !important;
+
+    }
+    span {
+      color: red;
+    }
+    .emailpass {
+      width: 100%;
+      height: 100%;
+      background-color: #1F618D;
+      color: white;
+      font-weight: bold;
+      font-size: medium;
+      border: none;
+    }
+
+    .emailpass:hover {
+      background-color: darkblue;
+    }
+    .signuplink {
+      color: #3588BF;
+    }
+    .signupline {
+      position: relative;
+      hr {
+        border-top: 1px solid gainsboro !important;
+      }
+    }
+
+  }
+}
+
+.img-logo {
+  width: 60px;
+  height: 60px;
+}
