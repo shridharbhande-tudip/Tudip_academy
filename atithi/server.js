@@ -33,6 +33,10 @@ router.get('/myAPI', function (req, res) {
 
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2c66c07193d5f242c4184c06672e2a80b8c287b8
 app.use('/api/auth', authRoute);
 app.use('/api/visitors', visitorsRoute);
 app.use('/api', router);

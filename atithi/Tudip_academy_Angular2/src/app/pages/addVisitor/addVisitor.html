@@ -1,0 +1,38 @@
+<div class="addVisitorContainer">
+    <div class="row" class="addVisitorSegment">
+        <div class="col-md-12 logo-wrapper">
+            <div class="addVisitortitle">
+                <h1> ATITHI </h1>
+            </div>
+        </div>
+        <div class="form-container">
+            <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
+
+                <div class="form-group row col-md-12 inputbutton namediv">
+                    <label>Enter name:</label><input [formControl]="name" type="text" class="form-control inputbox"
+                                                     placeholder="Enter name">
+                </div>
+                <div class="form-group row col-md-12 inputbutton emaildiv">
+                    <label>E-mail:</label> <input [formControl]="email" type="email" class="form-control inputbox"
+                                                  placeholder="Enter Email">
+                </div>
+                <div class="form-group row col-md-12 inputbutton phonediv"
+                     [ngClass]="{'has-error': (!mobile.valid && mobile.touched), 'has-success': (mobile.valid && mobile.touched)}">
+                    <label>Phone:</label><input [formControl]="mobile" type="tel" class="form-control inputbox"
+                                                placeholder="Enter 10 digit number">
+                </div>
+                <div class="form-group row col-md-12 inputbutton intimediv">
+                    <label>In-time:</label><input [formControl]="in_time" type="datetime-local"
+                                                  class="form-control inputbox" placeholder="Enter in_time">
+                </div>
+                <div class="form-group row col-md-12 inputbutton outdiv">
+                    <label>Out-time:</label><input [formControl]="out_time" type="datetime-local"
+                                                   class="form-control inputbox" placeholder="Enter out_time">
+                </div>
+                <div class="form-group row col-md-12 inputbutton submitButton">
+                    <input [disabled]="!form.valid || submitted" type="submit" class="AddVisitor" value="Add Visitor">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
